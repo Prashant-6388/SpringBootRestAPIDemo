@@ -22,7 +22,7 @@ public class EmployeeController {
 
 	@GetMapping
 	public List<Employee> getEmployees(){
-		return (List<Employee>) new ResponseEntity<>(repository.findAll(), HttpStatus.OK);
+		return repository.findAll();
 	}
 	
 	@GetMapping("/{id}")
