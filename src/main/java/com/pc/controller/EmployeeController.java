@@ -1,5 +1,6 @@
 package com.pc.controller;
 
+import com.pc.annotation.Trace;
 import com.pc.exception.EmployeeNotFoundException;
 import com.pc.model.Employee;
 import com.pc.repository.EmployeeRepository;
@@ -21,17 +22,20 @@ public class EmployeeController {
 	private EmployeeRepository repository;
 
 	@GetMapping
+	@Trace(name = "getEmployees")
 	public List<Employee> getEmployees(){
 		return repository.findAll();
 	}
 	
 	@GetMapping("/{id}")
-	public Employee getEmployeeById(@PathVariable("id") int id) {
-		return repository.findById(id).get();
-		
+	@Trace(name = "getEmployeeById")
+	public Employee getEmployeeById(@PathVariable("id") int id) throws EmployeeNotFoundException {
+		return repository.findById(id)
+			.orElseThrow(() -> new EmployeeNotFoundException("Employee with id " + id + " not found"));
 	}
 	
 	@PostMapping
+	@Trace(name="SaveEmployee")
 	public Employee createEmployee(@RequestBody Employee employee) {
 		return repository.save(employee);
 	}
